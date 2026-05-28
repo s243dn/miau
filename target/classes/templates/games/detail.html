@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${comparison.gameTitle} + ' - Comparativa'">Comparativa - MediaPriceTracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); font-family: 'Segoe UI', sans-serif; }
+        .sidebar { position: fixed; left: 0; top: 0; width: 260px; height: 100vh; background: rgba(26,26,46,0.95); backdrop-filter: blur(10px); border-right: 1px solid rgba(255,255,255,0.1); }
+        .sidebar-header { padding: 25px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .sidebar-header h3 { color: white; margin: 0; }
+        .sidebar-nav { padding: 20px 0; }
+        .sidebar-nav a { display: flex; align-items: center; gap: 12px; padding: 12px 25px; color: #a0a0b0; text-decoration: none; transition: all 0.3s; }
+        .sidebar-nav a:hover, .sidebar-nav a.active { background: rgba(102,126,234,0.2); color: white; border-left: 3px solid #667eea; }
+        .sidebar-nav i { width: 24px; }
+        .sidebar-footer { position: absolute; bottom: 0; width: 100%; padding: 20px 25px; border-top: 1px solid rgba(255,255,255,0.1); }
+        .sidebar-footer a { color: #a0a0b0; text-decoration: none; display: flex; align-items: center; gap: 12px; }
+        .sidebar-footer a:hover { color: white; }
+        .main-content { margin-left: 260px; padding: 25px; }
+        .card-glass { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 20px; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); }
+        .game-header { background: rgba(26,26,46,0.95); border-radius: 20px; padding: 25px; margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.1); }
+        .game-title { color: white; font-size: 1.8rem; margin: 0; }
+        .best-banner { background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 12px; padding: 12px 20px; margin-bottom: 25px; color: white; }
+        .comparison-table { width: 100%; border-collapse: collapse; }
+        .comparison-table th { text-align: left; padding: 15px; color: #a0a0b0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .comparison-table td { padding: 15px; color: white; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .comparison-table tr:hover { background: rgba(255,255,255,0.05); }
+        .store-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; }
+        .store-badge.steam { background: #171a21; }
+        .store-badge.gog { background: #5c2d91; }
+        .price-tag { color: #66c0f4; font-weight: bold; font-size: 1.1rem; }
+        .original-price { color: #888; text-decoration: line-through; font-size: 0.8rem; margin-left: 8px; }
+        .discount-badge { background: #ff4757; padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; margin-left: 8px; display: inline-block; }
+        .btn-back { background: #2a2a3e; color: white; padding: 8px 20px; border-radius: 25px; text-decoration: none; display: inline-block; }
+        .btn-back:hover { background: #667eea; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header"><h3><i class="fas fa-gamepad"></i> MediaPrice</h3><p>Tracker</p></div>
+        <div class="sidebar-nav">
+            <a href="/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="/games" class="active"><i class="fas fa-search"></i> Explorar Digital</a>
+            <a href="/physical"><i class="fas fa-box"></i> Explorar Físico</a>
+            <a href="/offers"><i class="fas fa-gift"></i> Juegos Gratis</a>
+            <a href="/wishlist"><i class="fas fa-heart"></i> Mi Wishlist</a>
+        </div>
+        <div class="sidebar-footer">
+            <a href="/profile"><i class="fas fa-user-circle"></i> Mi Perfil</a>
+            <a href="/logout"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="game-header">
+            <h1 class="game-title" th:text="${comparison.gameTitle}">Juego</h1>
+        </div>
+
+        <div class="best-banner" th:if="${comparison.bestOption != null}">
+            🏆 Mejor opción: <strong th:text="${comparison.bestOptionText}"></strong>
+            <span th:if="${comparison.savings != null}"> | Ahorro: <span th:text="${comparison.savings}"></span>€</span>
+        </div>
+
+        <div class="card-glass">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Tienda</th>
+                        <th>Edición</th>
+                        <th>Precio</th>
+                        <th>Descuento</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:if="${comparison.steamPrice != null}">
+                        <td><span class="store-badge steam"><i class="fab fa-steam"></i> Steam</span></td>
+                        <td><strong th:text="${comparison.gameTitle}"></strong> <span style="background: #667eea; padding: 2px 8px; border-radius: 12px; font-size: 0.7rem;">Estándar</span></td>
+                        <td>
+                            <span class="price-tag" th:text="${comparison.steamPrice} + '€'"></span>
+                            <span th:if="${comparison.steamOriginalPrice != null}" class="original-price" th:text="${comparison.steamOriginalPrice} + '€'"></span>
+                        </td>
+                        <td>
+                            <span th:if="${comparison.steamDiscount != null and comparison.steamDiscount > 0}" class="discount-badge" th:text="'-' + ${comparison.steamDiscount} + '%'"></span>
+                            <span th:unless="${comparison.steamDiscount != null and comparison.steamDiscount > 0}">-</span>
+                        </td>
+                    </tr>
+                    <tr th:if="${comparison.gogPrice != null}">
+                        <td><span class="store-badge gog"><i class="fab fa-gog"></i> GOG</span></td>
+                        <td><strong th:text="${comparison.gameTitle}"></strong> <span style="background: #667eea; padding: 2px 8px; border-radius: 12px; font-size: 0.7rem;">Estándar</span></td>
+                        <td>
+                            <span class="price-tag" th:text="${comparison.gogPrice} + '€'"></span>
+                            <span th:if="${comparison.gogOriginalPrice != null}" class="original-price" th:text="${comparison.gogOriginalPrice} + '€'"></span>
+                        </td>
+                        <td>
+                            <span th:if="${comparison.gogDiscount != null and comparison.gogDiscount > 0}" class="discount-badge" th:text="'-' + ${comparison.gogDiscount} + '%'"></span>
+                            <span th:unless="${comparison.gogDiscount != null and comparison.gogDiscount > 0}">-</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mt-4">
+            <a href="/games" class="btn-back"><i class="fas fa-arrow-left"></i> Volver</a>
+        </div>
+    </div>
+</body>
+</html>

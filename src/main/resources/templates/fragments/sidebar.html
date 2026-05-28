@@ -1,0 +1,24 @@
+<div class="sidebar p-4" th:fragment="sidebar">
+    <div class="text-center mb-4">
+        <i class="fas fa-gamepad fa-3x text-white"></i>
+        <h4 class="text-white mt-2">MediaPrice</h4>
+        <p class="text-white-50 small">Tracker</p>
+    </div>
+    <hr class="text-white">
+    <a href="/dashboard" th:classappend="${currentPage == 'dashboard' ? 'active' : ''}">
+        <i class="fas fa-tachometer-alt"></i> Dashboard
+    </a>
+    <a href="/games" th:classappend="${currentPage == 'games' ? 'active' : ''}">
+        <i class="fas fa-search"></i> Explorar Juegos
+    </a>
+    <a href="/offers" th:classappend="${currentPage == 'offers' ? 'active' : ''}">
+        <i class="fas fa-gift"></i> Ofertas Especiales
+    </a>
+    <a href="/wishlist" th:classappend="${currentPage == 'wishlist' ? 'active' : ''}">
+        <i class="fas fa-heart"></i> Mi Wishlist
+    </a>
+    <hr class="text-white">
+    <a href="/logout">
+        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+    </a>
+</div>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Explorar Juegos - MediaPriceTracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); font-family: 'Segoe UI', sans-serif; }
+        .sidebar { position: fixed; left: 0; top: 0; width: 260px; height: 100vh; background: rgba(26,26,46,0.95); backdrop-filter: blur(10px); border-right: 1px solid rgba(255,255,255,0.1); }
+        .sidebar-header { padding: 25px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .sidebar-header h3 { color: white; margin: 0; }
+        .sidebar-nav { padding: 20px 0; }
+        .sidebar-nav a { display: flex; align-items: center; gap: 12px; padding: 12px 25px; color: #a0a0b0; text-decoration: none; }
+        .sidebar-nav a:hover, .sidebar-nav a.active { background: rgba(102,126,234,0.2); color: white; border-left: 3px solid #667eea; }
+        .sidebar-nav i { width: 24px; }
+        .sidebar-footer { position: absolute; bottom: 0; width: 100%; padding: 20px 25px; border-top: 1px solid rgba(255,255,255,0.1); }
+        .sidebar-footer a { color: #a0a0b0; text-decoration: none; display: flex; align-items: center; gap: 12px; }
+        .main-content { margin-left: 260px; padding: 25px; }
+        .card-glass { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 20px; padding: 20px; border: 1px solid rgba(255,255,255,0.2); cursor: pointer; transition: transform 0.3s; height: 100%; }
+        .card-glass:hover { transform: translateY(-5px); }
+        .search-box { background: white; border-radius: 50px; padding: 12px 20px; width: 100%; border: none; }
+        .btn-search { background: linear-gradient(135deg, #667eea, #764ba2); border: none; border-radius: 50px; padding: 12px 30px; color: white; }
+        .text-white { color: white; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header"><h3><i class="fas fa-gamepad"></i> MediaPrice</h3><p>Tracker</p></div>
+        <div class="sidebar-nav">
+            <a href="/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="/games" class="active"><i class="fas fa-search"></i> Explorar Digital</a>
+            <a href="/physical"><i class="fas fa-box"></i> Explorar Físico</a>
+            <a href="/offers"><i class="fas fa-gift"></i> Juegos Gratis</a>
+            <a href="/wishlist"><i class="fas fa-heart"></i> Mi Wishlist</a>
+        </div>
+        <div class="sidebar-footer">
+            <a href="/profile"><i class="fas fa-user-circle"></i> Mi Perfil</a>
+            <a href="/logout"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="row mb-4">
+            <div class="col-md-10"><input type="text" id="searchInput" class="search-box" placeholder="🔍 Buscar juegos... (Ej: cyberpunk, zelda)"></div>
+            <div class="col-md-2"><button class="btn-search w-100" onclick="buscar()">Buscar</button></div>
+        </div>
+        <div id="loading" class="text-center py-5" style="display:none"><div class="spinner-border text-white"></div><p class="text-white mt-2">Buscando...</p></div>
+        <div id="results" class="row g-4"></div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function buscar() {
+            var query = $('#searchInput').val();
+            if (!query.trim()) return;
+            $('#loading').show();
+            $('#results').empty();
+            $.ajax({
+                url: '/api/search?q=' + encodeURIComponent(query),
+                type: 'GET',
+                success: function(data) {
+                    $('#loading').hide();
+                    if (!data || data.length === 0) {
+                        $('#results').html('<div class="col-12 text-center text-white"><h3>No se encontraron juegos</h3></div>');
+                        return;
+                    }
+                    var html = '';
+                    data.forEach(function(game) {
+                        html += '<div class="col-md-3"><div class="card-glass" onclick="window.location.href=\'/games/compare?name=' + encodeURIComponent(game.name) + '\'">' +
+                            '<img src="' + (game.backgroundImage || 'https://via.placeholder.com/300x180') + '" class="img-fluid rounded" style="height: 180px; width: 100%; object-fit: cover;">' +
+                            '<h5 class="mt-2 text-white">' + game.name + '</h5>' +
+                            (game.metacritic > 0 ? '<span class="badge bg-info">Metascore: ' + game.metacritic + '</span>' : '') +
+                            '</div></div>';
+                    });
+                    $('#results').html(html);
+                },
+                error: function() { $('#loading').hide(); $('#results').html('<div class="col-12 text-center text-white"><h3>Error al buscar</h3></div>'); }
+            });
+        }
+        $('#searchInput').keypress(function(e) { if (e.which == 13) buscar(); });
+    </script>
+</body>
+</html>
