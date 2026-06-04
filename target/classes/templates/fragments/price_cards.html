@@ -1,0 +1,102 @@
+<div th:fragment="price_list">
+    <div class="row g-4 mb-5">
+        
+        <div class="col-md-6 col-lg-3">
+            <div class="card h-100 border-primary shadow-sm">
+                <div class="card-header bg-primary text-white text-center">
+                    <h4 class="mb-0"><i class="fa-brands fa-steam"></i> Steam</h4>
+                </div>
+                <div class="card-body text-center d-flex flex-column justify-content-center">
+                    <div th:if="${comparison.steam != null and comparison.steam.available}">
+                        <h2 class="text-primary fw-bold" th:text="${comparison.steam.currentPrice} + ' €'"></h2>
+                    </div>
+                    <div th:unless="${comparison.steam != null and comparison.steam.available}">
+                        <h5 class="text-muted">No disponible</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+            <div class="card h-100 border-secondary shadow-sm">
+                <div class="card-header bg-secondary text-white text-center">
+                    <h4 class="mb-0"><i class="fa-solid fa-gamepad"></i> GOG</h4>
+                </div>
+                <div class="card-body text-center d-flex flex-column justify-content-center">
+                    <div th:if="${comparison.gog != null and comparison.gog.available}">
+                        <h2 class="text-secondary fw-bold" th:text="${comparison.gog.currentPrice} + ' €'"></h2>
+                    </div>
+                    <div th:unless="${comparison.gog != null and comparison.gog.available}">
+                        <h5 class="text-muted">No disponible</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+            <div class="card h-100 border-success shadow">
+                <div class="card-header bg-success text-white text-center">
+                    <h4 class="mb-0"><i class="fa-solid fa-key"></i> Eneba</h4>
+                </div>
+                <div class="card-body text-center d-flex flex-column justify-content-center">
+                    <div th:if="${comparison.eneba != null and comparison.eneba.available}">
+                        <h2 class="text-success fw-bold display-6" th:text="${comparison.eneba.currentPrice} + ' €'"></h2>
+                        <span class="badge bg-success">Clave digital</span>
+                    </div>
+                    <div th:unless="${comparison.eneba != null and comparison.eneba.available}">
+                        <h5 class="text-muted">No disponible</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+            <div class="card h-100 border-info shadow-sm">
+                <div class="card-header bg-info text-white text-center">
+                    <h4 class="mb-0"><i class="fa-solid fa-gift"></i> Humble Bundle</h4>
+                </div>
+                <div class="card-body text-center d-flex flex-column justify-content-center">
+                    <div th:if="${comparison.humbleBundle != null and comparison.humbleBundle.available}">
+                        <h2 class="text-info fw-bold" th:text="${comparison.humbleBundle.currentPrice} + ' €'"></h2>
+                    </div>
+                    <div th:unless="${comparison.humbleBundle != null and comparison.humbleBundle.available}">
+                        <h5 class="text-muted">No disponible</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+            <div class="card h-100 border-danger shadow-sm">
+                <div class="card-header bg-danger text-white text-center">
+                    <h4 class="mb-0"><i class="fa-solid fa-fire"></i> Fanatical</h4>
+                </div>
+                <div class="card-body text-center d-flex flex-column justify-content-center">
+                    <div th:if="${comparison.fanatical != null and comparison.fanatical.available}">
+                        <h2 class="text-danger fw-bold" th:text="${comparison.fanatical.currentPrice} + ' €'"></h2>
+                    </div>
+                    <div th:unless="${comparison.fanatical != null and comparison.fanatical.available}">
+                        <h5 class="text-muted">No disponible</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+            <div class="card h-100 border-warning shadow-sm">
+                <div class="card-header bg-warning text-dark text-center">
+                    <h4 class="mb-0"><i class="fa-solid fa-tags"></i> API Global</h4>
+                </div>
+                <div class="card-body text-center d-flex flex-column justify-content-center">
+                    <div th:if="${comparison.cheapShark != null and comparison.cheapShark.available}">
+                        <h2 class="text-warning text-dark fw-bold" th:text="${comparison.cheapShark.currentPrice} + ' €'"></h2>
+                    </div>
+                    <div th:unless="${comparison.cheapShark != null and comparison.cheapShark.available}">
+                        <h5 class="text-muted">No disponible</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

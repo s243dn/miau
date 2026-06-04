@@ -1,23 +1,29 @@
 package com.mediatracker.scraping.infrastructure.web.controller;
 
-import com.mediatracker.scraping.application.service.GameComparisonService;
-import com.mediatracker.scraping.domain.model.PriceComparison;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import com.mediatracker.scraping.application.service.UnifiedPriceComparisonService;
 
-@RestController
+@Controller 
 public class PriceCompareController {
 
-    private final GameComparisonService gameComparisonService;
+    private final UnifiedPriceComparisonService unifiedPriceComparisonService;
 
-    public PriceCompareController(GameComparisonService gameComparisonService) {
-        this.gameComparisonService = gameComparisonService;
+    public PriceCompareController(UnifiedPriceComparisonService unifiedPriceComparisonService) {
+        this.unifiedPriceComparisonService = unifiedPriceComparisonService;
     }
 
-    @GetMapping("/api/compare")
-    public PriceComparison compare(@RequestParam String name) {
-        System.out.println("🎮 Comparando: " + name);
-        return gameComparisonService.getFullComparison(name);
+    // BORRASTE EL MÉTODO 'comparePage' Y YA NO HAY COLISIÓN
+
+    // ESTE ES EL ÚNICO MÉTODO QUE DEBE QUEDAR AQUÍ:
+    @GetMapping("/api/compare-fragment")
+    public String getPriceFragment(@RequestParam String gameName, Model model) {
+        var comparison = unifiedPriceComparisonService.getFullComparison(gameName);
+        model.addAttribute("comparison", comparison);
+        
+        // Esto le dice a Thymeleaf que cargue el trozo de HTML
+        return "fragments/price_cards :: price_list";
     }
 }

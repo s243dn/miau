@@ -1,7 +1,6 @@
 package com.mediatracker.scraping.infrastructure.web.controller;
 
-import com.mediatracker.scraping.application.service.GameComparisonService;
-import com.mediatracker.scraping.domain.model.PriceComparison;
+import com.mediatracker.scraping.application.service.UnifiedPriceComparisonService;
 import com.mediatracker.scraping.infrastructure.scraper.RawgApiScraper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,11 +12,12 @@ import java.util.List;
 @Controller
 public class GameSearchController {
     
-    private final GameComparisonService gameComparisonService;
+    // 1. Cambiamos al servicio UNIFICADO que tiene Eneba y la API
+    private final UnifiedPriceComparisonService unifiedComparisonService;
     private final RawgApiScraper rawgScraper;
     
-    public GameSearchController(GameComparisonService gameComparisonService, RawgApiScraper rawgScraper) {
-        this.gameComparisonService = gameComparisonService;
+    public GameSearchController(UnifiedPriceComparisonService unifiedComparisonService, RawgApiScraper rawgScraper) {
+        this.unifiedComparisonService = unifiedComparisonService;
         this.rawgScraper = rawgScraper;
     }
     
@@ -30,9 +30,12 @@ public class GameSearchController {
     @GetMapping("/games/compare")
     public String compareGame(@RequestParam String name, Model model) {
         model.addAttribute("currentPage", "games");
-        PriceComparison comparison = gameComparisonService.getFullComparison(name);
+        // 2. Pedimos el objeto unificado (con Steam, GOG, Eneba, CheapShark)
+        UnifiedPriceComparisonService.UnifiedComparison comparison = unifiedComparisonService.getFullComparison(name);
         model.addAttribute("comparison", comparison);
-        return "games/detail";
+        
+        // 3. OJO: El controlador manda a dibujar a "detail.html"
+        return "games/detail"; 
     }
     
     @GetMapping("/api/search")
